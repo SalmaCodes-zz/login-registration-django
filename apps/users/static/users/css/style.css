@@ -6,12 +6,12 @@
 #wrapper {
     font-family: Verdana, Geneva, sans-serif;
     width: 960px;
-    margin: 20px auto;
+    margin: 0 auto;
+    padding-top: 20px;
 }
 h1 {
     font-weight: lighter;
-    margin-top: 40px;
-    margin-bottom: 10px;
+    padding: 10px 0;
 }
 label {
     display: inline-block;
@@ -19,7 +19,6 @@ label {
     min-width: 101px;
 }
 form {
-    position: relative;
     width: 350px;
 }
 input[type="text"], input[type="password"] {
@@ -36,13 +35,31 @@ input[type="submit"] {
     box-shadow: 2px 2px black;
     padding: 2px 5px;
     font-size: 0.9em;
-    position: absolute;
-    right: 2px;
     font-weight: lighter;
+    margin-top: 10px;
 }
 .error {
     color: red;
 }
 .green {
     color:#39a442;
+}
+.column {
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 20px;
+}
+.column#registration {
+    border-right: 2px solid black;
+    padding-right: 20px;
+    padding-bottom: 10px;
+}
+.column#registration input[type="submit"] {
+    margin-left: 280px;
+}
+.column#login {
+    padding-left: 10px;
+}
+.column#login input[type="submit"] {
+    margin-left: 300px;
 }
