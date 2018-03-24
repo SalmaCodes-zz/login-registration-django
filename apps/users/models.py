@@ -56,7 +56,7 @@ class UserManager(models.Manager):
         
         # Check that the user is registered
         data = User.objects.filter(email=email)
-        if len(data) == 0:
+        elif len(data) == 0:
             errors["email"] = "Email does not exist. Register first!"
         
         # Make sure the password matches
