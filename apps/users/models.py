@@ -18,13 +18,13 @@ class UserManager(models.Manager):
         # First Name - Required; No fewer than 2 characters; letters only
         if len(fname) < 2:
             errors["first_name"] = "First name must be at least 2 characters."
-        if not fname.isalpha():
+        elif not fname.isalpha():
             errors["first_name"] = "First name must be letters only."
         
         # Last Name - Required; No fewer than 2 characters; letters only
         if len(lname) < 2:
             errors["last_name"] = "Last name must be at least 2 characters."
-        if not lname.isalpha():
+        elif not lname.isalpha():
             errors["last_name"] = "Last name must be letters only."
 
         # Email - Required; Valid Format; Doesn't already exist
@@ -39,7 +39,7 @@ class UserManager(models.Manager):
         # Password - Required; No fewer than 8 characters in length; matches Password Confirmation
         if len(password) < 8:
             errors["password"] = "Password must be at least 8 characters."
-        if password != password_confirmation:
+        elif password != password_confirmation:
             errors["password"] = "Password confirmation must match the password."
         return errors
     
