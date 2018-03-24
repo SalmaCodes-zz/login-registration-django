@@ -48,6 +48,7 @@ class UserManager(models.Manager):
         email = postData['email']
         password = postData['password']
 
+        data = User.objects.filter(email=email)
         # Email - Required; Valid Format
         if len(email) < 1:
             errors["email"] = "Email cannot be empty!"
@@ -55,7 +56,6 @@ class UserManager(models.Manager):
              errors["email"] = "Invalid Email Address!"
         
         # Check that the user is registered
-        data = User.objects.filter(email=email)
         elif len(data) == 0:
             errors["email"] = "Email does not exist. Register first!"
         
