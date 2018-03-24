@@ -12,6 +12,7 @@
 h1 {
     font-weight: lighter;
     padding: 10px 0;
+    text-decoration: underline;
 }
 label {
     display: inline-block;
