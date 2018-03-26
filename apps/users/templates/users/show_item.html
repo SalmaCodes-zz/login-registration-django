@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'users/css/style.css' %}">
+    <title>{{item.name}}</title>
+</head>
+<body>
+    <div id="wrapper">
+        <div class="header">
+            <div class="right-links">
+                <a href="/dashboard">Home</a>
+                <a href="/logout">Logout</a>
+            </div>
+        </div>
+        <h1>{{item.name}}</h1>
+        <h3>Users who added this product/item under their wish list:</h3>
+        {% for user in item.wished_by.all %}
+        <p>{{user.name}}</p>
+        {% endfor %}
+    </div>
+</body>
+</html>

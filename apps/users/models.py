@@ -1,40 +1,29 @@
 from __future__ import unicode_literals
 
 from django.db import models
-import bcrypt, md5, re
-EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
+import bcrypt
 
 
 # Create your models here.
 class UserManager(models.Manager):
     def registration_validator(self, postData):
         errors = {}
-        fname = postData['first_name']
-        lname = postData['last_name']
-        email = postData['email']
+        name = postData['name']
+        username = postData['username']
         password = postData['password']
         password_confirmation = postData['password_confirmation']
 
-        # First Name - Required; No fewer than 2 characters; letters only
-        if len(fname) < 2:
-            errors["first_name"] = "First name must be at least 2 characters."
-        elif not fname.isalpha():
-            errors["first_name"] = "First name must be letters only."
-        
-        # Last Name - Required; No fewer than 2 characters; letters only
-        if len(lname) < 2:
-            errors["last_name"] = "Last name must be at least 2 characters."
-        elif not lname.isalpha():
-            errors["last_name"] = "Last name must be letters only."
+        # Name - Required; No fewer than 3 characters
+        if len(name) < 3:
+            errors["name"] = "Name must be at least 3 characters."
 
-        # Email - Required; Valid Format; Doesn't already exist
-        if len(email) < 1:
-            errors["email"] = "Email cannot be empty!"
-        elif not EMAIL_REGEX.match(email):
-            errors["email"] = "Invalid Email Address!"
-        data = User.objects.filter(email=email)
-        if len(data) > 0:
-            errors["email"] = "Email already exists, please log in."
+        # Username - Required; No fewer than 3 characters; Doesn't already exist
+        if len(username) < 3:
+            errors["username"] = "Username must be at least 3 characters."
+        else:
+            data = User.objects.filter(username=username)
+            if len(data) > 0:
+                errors["username"] = "Username already exists, please log in."
         
         # Password - Required; No fewer than 8 characters in length; matches Password Confirmation
         if len(password) < 8:
@@ -45,19 +34,17 @@ class UserManager(models.Manager):
     
     def login_validator(self, postData):
         errors = {}
-        email = postData['email']
+        username = postData['username']
         password = postData['password']
 
-        data = User.objects.filter(email=email)
-        # Email - Required; Valid Format
-        if len(email) < 1:
-            errors["email"] = "Email cannot be empty!"
-        elif not EMAIL_REGEX.match(email):
-             errors["email"] = "Invalid Email Address!"
+        data = User.objects.filter(username=username)
+        # Username - Required; No fewer than 3 characters;
+        if len(username) < 3:
+            errors["username"] = "Username must be at least 3 characters."
         
         # Check that the user is registered
         elif len(data) == 0:
-            errors["email"] = "Email does not exist. Register first!"
+            errors["username"] = "Username does not exist. Register first!"
         
         # Make sure the password matches
         elif not bcrypt.checkpw(password.encode(), data[0].password.encode()):
@@ -67,13 +54,33 @@ class UserManager(models.Manager):
 
 
 class User(models.Model):
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
-    email = models.CharField(max_length=255)
+    name = models.CharField(max_length=255)
+    username = models.CharField(max_length=255)
     password = models.CharField(max_length=255)
+    hired_date = models.DateTimeField()
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)
     objects = UserManager()
     def __repr__(self):
-        return "<User object: {} {}, {}>".format(
-            self.first_name, self.last_name, self.email)
+        return "<User object: {} @{}>".format(
+            self.name, self.username)
+
+
+class ItemManager(models.Manager):
+    def basic_validator(self, postData):
+        errors = {}
+        # Item name should be more than 3 chracters
+        if len(postData['name']) < 4:
+            errors['name'] = "Name should be more than 3 characters."
+        return errors
+
+
+class Item(models.Model):
+    name = models.CharField(max_length=255)
+    added_by = models.ForeignKey(User, related_name="added_items")
+    wished_by = models.ManyToManyField(User, related_name="wished_items")
+    created_at = models.DateTimeField(auto_now_add = True)
+    updated_at = models.DateTimeField(auto_now = True)
+    objects = ItemManager()
+    def __repr__(self):
+        return "<Item object: {}>".format(self.name)

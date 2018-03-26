@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'users/css/style.css' %}">
+    <title>Create Item</title>
+</head>
+<body>
+    <div id="wrapper">
+        {% if messages %} {% for message in messages %}
+        <div class="error">- {{message}}</div>
+        {% endfor %} {% endif %}
+        <div class="header">
+            <div class="right-links">
+                <a href="/dashboard">Home</a>
+                <a href="/logout">Logout</a>
+            </div>
+        </div>
+        <h1>Create a New Wish List Item</h1>
+        <form action='/add_item' method='POST'>
+            {% csrf_token %}
+            <div>
+                <label for="name">Item/Product:</label>
+                <input type="text" name="name" id="name">
+            </div>
+            <input type="submit" value="Add">
+        </form>
+    </div>
+</body>
+</html>
